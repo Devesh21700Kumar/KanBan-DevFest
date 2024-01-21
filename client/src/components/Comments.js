@@ -1,30 +1,57 @@
 import React, { useEffect, useState } from "react";
-import socketIO from "socket.io-client";
 import { useParams } from "react-router-dom";
 
-const socket = socketIO.connect("http://localhost:4000");
 
 const Comments = () => {
 	const { category, id } = useParams();
 	const [comment, setComment] = useState("");
-	const [commentList, setCommentList] = useState([]);
-
-	useEffect(() => {
-		socket.emit("fetchComments", { category, id });
-	}, [category, id]);
-
-	useEffect(() => {
-		socket.on("comments", (data) => setCommentList(data));
-	}, []);
+	const [commentList, setCommentList] = useState([{
+        pending: {
+            title: "pending",
+            items: [
+                {
+                    id: Math.random().toString(36).substring(2, 10),
+                    title: "Send the Figma file to Dima",
+                    comments: [],
+                },
+            ],
+        },
+        ongoing: {
+            title: "ongoing",
+            items: [
+                {
+                    id: Math.random().toString(36).substring(2, 10),
+                    title: "Review GitHub issues",
+                    comments: [
+                        {
+                            name: "David",
+                            text: "Ensure you review before merging",
+                            id: Math.random().toString(36).substring(2, 10),
+                        },
+                    ],
+                },
+            ],
+        },
+        completed: {
+            title: "completed",
+            items: [
+                {
+                    id: Math.random().toString(36).substring(2, 10),
+                    title: "Create technical contents",
+                    comments: [
+                        {
+                            name: "Dima",
+                            text: "Make sure you check the requirements",
+                            id: Math.random().toString(36).substring(2, 10),
+                        },
+                    ],
+                },
+            ],
+        },
+    }]);
 
 	const addComment = (e) => {
 		e.preventDefault();
-		socket.emit("addComment", {
-			comment,
-			category,
-			id,
-			userId: localStorage.getItem("userId"),
-		});
 		setComment("");
 	};
 

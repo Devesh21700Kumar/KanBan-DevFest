@@ -91,11 +91,18 @@ socketIO.on("connection", (socket) => {
 
 	socket.on("taskDragged", (data) => {
 		const { source, destination } = data;
+        /*
+        This code creates a shallow copy of the item being dragged (itemMoved). It uses the spread operator (...) to create a new object with the same properties as the dragged item */
 		const itemMoved = {
 			...tasks[source.droppableId].items[source.index],
 		};
 		console.log("ItemMoved>>> ", itemMoved);
+
+        /*This line removes the dragged item from its original position within the source list. It uses splice() to modify the array in place. The first argument (source.index) is the index from which to start changing the array, and the second argument (1) indicates how many elements to remove*/
 		tasks[source.droppableId].items.splice(source.index, 1);
+
+        /*
+        This line inserts the dragged item into its new position within the destination list. It uses splice() again, starting at the destination.index and inserting the itemMoved object into the array. The third argument (0) specifies that no elements should be removed at the insertion point.*/
 		tasks[destination.droppableId].items.splice(
 			destination.index,
 			0,
@@ -140,3 +147,12 @@ app.get("/api", (req, res) => {
 http.listen(PORT, () => {
 	console.log(`Server listening on ${PORT}`);
 });
+
+/*
+http: This likely refers to an instance of an HTTP server created using a framework or library like Express.js. This server is an object with methods for handling HTTP requests.
+
+.listen(PORT, callback): This method binds and listens for connections on the specified network address (in this case, it's listening on the specified PORT). It starts the server, and the provided callback function is executed once the server is listening and ready to handle requests.
+
+PORT: This is a variable (constant) that holds the port number on which the server will listen for incoming requests. For example, if PORT is set to 3000, the server will listen on port 3000.
+
+() => { console.log(Server listening on ${PORT}); }: This is the callback function that gets executed once the server is successfully listening. In this case, it logs a message to the console indicating that the server is listening on the specified port.*/

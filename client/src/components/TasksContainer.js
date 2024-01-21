@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const TasksContainer = ({ socket }) => {
+const TasksContainer = () => {
 	const [tasks, setTasks] = useState({});
 
 	useEffect(() => {
@@ -14,11 +14,6 @@ const TasksContainer = ({ socket }) => {
 		fetchTasks();
 	}, []);
 
-	useEffect(() => {
-		socket.on("tasks", (data) => {
-			setTasks(data);
-		});
-	}, [socket]);
 
 	const handleDragEnd = ({ destination, source }) => {
 		if (!destination) return;
@@ -27,11 +22,6 @@ const TasksContainer = ({ socket }) => {
 			destination.droppableId === source.droppableId
 		)
 			return;
-
-		socket.emit("taskDragged", {
-			source,
-			destination,
-		});
 	};
 	return (
 		<div className='container'>
